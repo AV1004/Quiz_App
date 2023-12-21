@@ -4,34 +4,16 @@ import TrophyIcon from "../assets/quiz-complete.png";
 import Question from "./Question";
 
 export default function Quiz() {
-  const [answerState, setAnswerState] = useState("");
   const [userAnswers, setUserAnswers] = useState([]);
 
-  const activeQurstionIndex =
-    answerState === "" ? userAnswers.length : userAnswers.length - 1;
+  const activeQurstionIndex = userAnswers.length;
   const quizIsComplete = activeQurstionIndex === QUESTIONS.length;
 
-  const handleSelectAns = useCallback(
-    function handleSelectAns(selectedAnswer) {
-      setAnswerState("answered");
-      setUserAnswers((prevAnswers) => {
-        return [...prevAnswers, selectedAnswer];
-      });
-
-      setTimeout(() => {
-        if (selectedAnswer === QUESTIONS[activeQurstionIndex].answers[0]) {
-          setAnswerState("correct");
-        } else {
-          setAnswerState("wrong");
-        }
-
-        setTimeout(() => {
-          setAnswerState("");
-        }, 2000);
-      }, 1000);
-    },
-    [activeQurstionIndex]
-  );
+  const handleSelectAns = useCallback(function handleSelectAns(selectedAnswer) {
+    setUserAnswers((prevAnswers) => {
+      return [...prevAnswers, selectedAnswer];
+    });
+  }, []);
 
   const handleSkipAnswer = useCallback(() => {
     handleSelectAns(null);
@@ -62,10 +44,7 @@ export default function Quiz() {
     <div id="quiz">
       <Question
         key={activeQurstionIndex}
-        questionText={QUESTIONS[activeQurstionIndex].text}
-        answers={QUESTIONS[activeQurstionIndex].answers}
-        answerState={answerState}
-        selectedAnswer={userAnswers[userAnswers.length - 1]}
+        index={activeQurstionIndex}
         onSelectAnswer={handleSelectAns}
         onSkipAnswer={handleSkipAnswer}
       />
