@@ -3,7 +3,12 @@ import QuestionTimer from "./QuestionTimer";
 import Answers from "./Answers";
 import QUESTION from "../questions";
 
-export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
+export default function Question({
+  index,
+  onSelectAnswer,
+  onSkipAnswer,
+  sendAns,
+}) {
   const [answer, setAnswer] = useState({
     selectedAnswer: "",
     isCorrect: null,
@@ -33,6 +38,7 @@ export default function Question({ index, onSelectAnswer, onSkipAnswer }) {
 
       setTimeout(() => {
         onSelectAnswer(answer);
+        sendAns(answer);
       }, 2000);
     }, 1000);
   }

@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from "react";
 import QUESTIONS from "../questions";
-import TrophyIcon from "../assets/quiz-complete.png";
 import Question from "./Question";
+import Summary from "./Summary";
 
 export default function Quiz() {
   const [userAnswers, setUserAnswers] = useState([]);
+  const [answerSummary, setAnswerSummary] = useState([]);
 
   const activeQurstionIndex = userAnswers.length;
   const quizIsComplete = activeQurstionIndex === QUESTIONS.length;
@@ -14,6 +15,23 @@ export default function Quiz() {
       return [...prevAnswers, selectedAnswer];
     });
   }, []);
+
+  const sendAns = (ans) => {
+    if (ans === QUESTIONS[activeQurstionIndex].answers[0]) {
+      setAnswerSummary((prevAnsSummary) => {
+        return [...prevAnsSummary, "correct"];
+      });
+    } else if (
+      ans !== QUESTIONS[activeQurstionIndex].answers[0] &&
+      ans !== null
+    ) {
+      setAnswerSummary((prevAnsSummary) => {
+        return [...prevAnsSummary, "wrong"];
+      });
+    }
+
+    console.log(answerSummary);
+  };
 
   const handleSkipAnswer = useCallback(() => {
     handleSelectAns(null);
@@ -32,12 +50,7 @@ export default function Quiz() {
   // };
 
   if (quizIsComplete === true) {
-    return (
-      <div id="summary">
-        <img src={TrophyIcon} alt="Trophy Icon" />
-        <h2>Quiz Completed!</h2>
-      </div>
-    );
+    return <Summary userAnswers={userAnswers} answerSummary={answerSummary} />;
   }
 
   return (
@@ -47,6 +60,7 @@ export default function Quiz() {
         index={activeQurstionIndex}
         onSelectAnswer={handleSelectAns}
         onSkipAnswer={handleSkipAnswer}
+        sendAns={sendAns}
       />
     </div>
   );
